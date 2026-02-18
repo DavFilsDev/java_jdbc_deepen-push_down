@@ -27,10 +27,11 @@ CREATE TABLE invoice_line (
                               unit_price NUMERIC(10,2) NOT NULL
 );
 
-INSERT INTO invoice (customer_name, status) VALUES
+INSERT INTO invoice (id, customer_name, status) VALUES
                                                 (1, 'Alice', 'CONFIRMED'),
                                                 (2, 'Bob', 'PAID'),
                                                 (3, 'Charlie', 'DRAFT');
+
 INSERT INTO invoice_line (invoice_id, label, quantity, unit_price) VALUES
                                                                        (1, 'Produit A', 2, 100),
                                                                        (1, 'Produit B', 1, 50),
