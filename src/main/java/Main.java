@@ -1,22 +1,23 @@
-import DAO.InvoiceDAO;
-import models.*;
+import dao.InvoiceDAO;
+import db.DBConnection;
+import models.InvoiceTotal;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 
 public class Main {
+
     public static void main(String[] args) throws Exception {
 
-        Connection conn = DriverManager.getConnection(
-                "jdbc:postgresql://localhost:5432/invoice_management_db",
-                "postgres",
-                "password"
-        );
+        DBConnection db = new DBConnection();
+        Connection conn = db.getDBConnection();
 
         InvoiceDAO dao = new InvoiceDAO(conn);
 
-        for (InvoiceTotal it : dao.findInvoiceTotals()) {
-            System.out.println(it);
+        for (InvoiceTotal total : dao.findInvoiceTotals()) {
+            System.out.println(total);
         }
+
+        db.close(conn);
     }
 }
+

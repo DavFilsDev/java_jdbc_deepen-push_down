@@ -37,4 +37,3 @@ public class InvoiceTotal {
         return id + " | " + customerName + " | " + totalAmount;
     }
 }
-

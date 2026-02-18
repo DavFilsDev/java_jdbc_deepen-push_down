@@ -1,6 +1,7 @@
-package DAO;
+package dao;
 
 import models.*;
+
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
@@ -8,7 +9,7 @@ import java.util.List;
 
 public class InvoiceDAO {
 
-    private Connection connection;
+    private final Connection connection;
 
     public InvoiceDAO(Connection connection) {
         this.connection = connection;
@@ -41,4 +42,3 @@ public class InvoiceDAO {
         return results;
     }
 }
-
