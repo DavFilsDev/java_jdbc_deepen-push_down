@@ -43,17 +43,5 @@ public class Invoice {
     public String toString() {
         return "Invoice{id=" + id + ", customerName='" + customerName + "', status=" + status + "}";
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Invoice invoice = (Invoice) o;
-        return id == invoice.id && Objects.equals(customerName, invoice.customerName) && status == invoice.status;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, customerName, status);
-    }
 }
 
