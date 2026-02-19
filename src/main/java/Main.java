@@ -15,6 +15,7 @@ public class Main {
             testFindInvoiceTotals(dataRetriever);
             testFindConfirmedAndPaidInvoiceTotals(dataRetriever);
             testComputeStatusTotals(dataRetriever);
+            testComputeWeightedTurnover(dataRetriever);
         } catch (Exception e) {
             System.err.println("Error during all test: " + e.getMessage());
             e.printStackTrace();
@@ -49,6 +50,13 @@ public class Main {
 
         InvoiceStatusTotals totals = dataRetriever.computeStatusTotals();
         System.out.println(totals);
+    }
+
+    public static void testComputeWeightedTurnover(DataRetriever dataRetriever) {
+        System.out.println("\n=== Q4 - Weighted Turnover ===");
+
+        Double turnover = dataRetriever.computeWeightedTurnover();
+        System.out.println("Weighted Turnover = " + turnover);
     }
 
 }
