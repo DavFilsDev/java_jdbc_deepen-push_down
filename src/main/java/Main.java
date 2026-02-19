@@ -2,6 +2,7 @@ import db.DBConnection;
 import models.*;
 import services.DataRetriever;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class Main {
@@ -17,6 +18,7 @@ public class Main {
             testComputeStatusTotals(dataRetriever);
             testComputeWeightedTurnover(dataRetriever);
             testFindInvoiceTaxSummaries(dataRetriever);
+            testComputeWeightedTurnoverTtc(dataRetriever);
         } catch (Exception e) {
             System.err.println("Error during test: " + e.getMessage());
             e.printStackTrace();
@@ -65,5 +67,12 @@ public class Main {
 
         dataRetriever.findInvoiceTaxSummaries()
                 .forEach(System.out::println);
+    }
+
+    public static void testComputeWeightedTurnoverTtc(DataRetriever dataRetriever) {
+        System.out.println("\n=== Q5-B - Weighted Turnover TTC ===");
+
+        BigDecimal total = dataRetriever.computeWeightedTurnoverTtc();
+        System.out.println("Weighted TTC Turnover = " + total);
     }
 }
