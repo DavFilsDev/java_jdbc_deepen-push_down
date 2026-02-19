@@ -15,7 +15,7 @@ public class Main {
             testFindInvoiceTotals(dataRetriever);
 
         } catch (Exception e) {
-            System.err.println("Erreur pendant les tests: " + e.getMessage());
+            System.err.println("Error during all test: " + e.getMessage());
             e.printStackTrace();
         }
     }
