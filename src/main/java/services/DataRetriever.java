@@ -190,5 +190,37 @@ public class DataRetriever {
         }
     }
 
+    public BigDecimal computeWeightedTurnoverTtc() {
+        String sql = """
+        SELECT 
+            SUM(
+                CASE 
+                    WHEN i.status = 'PAID' THEN (il.quantity * il.unit_price) * (1 + t.rate / 100) * 1.0
+                    WHEN i.status = 'CONFIRMED' THEN (il.quantity * il.unit_price) * (1 + t.rate / 100) * 0.5
+                    WHEN i.status = 'DRAFT' THEN 0
+                END
+            ) AS weighted_ttc
+        FROM invoice i
+        JOIN invoice_line il ON i.id = il.invoice_id
+        CROSS JOIN tax_config t;
+    """;
+
+        Connection connection = dbConnection.getDBConnection();
+
+        try (PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                return rs.getBigDecimal("weighted_ttc");
+            }
+            return BigDecimal.ZERO;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            dbConnection.close(connection);
+        }
+    }
+
 
 }
