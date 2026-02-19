@@ -29,4 +29,18 @@ public class Main {
             System.out.println(it);
         }
     }
+
+    public static void testFindConfirmedAndPaidInvoiceTotals(DataRetriever dataRetriever) {
+        System.out.println("\n=== Q2 - Confirmed and Paid Invoice Totals ===");
+
+        List<InvoiceTotal> totals = dataRetriever.findConfirmedAndPaidInvoiceTotals();
+
+        for (InvoiceTotal it : totals) {
+            System.out.println(it.getId() + " | "
+                    + it.getCustomerName() + " | "
+                    + it.getStatus() + " | "
+                    + it.getTotalAmount());
+        }
+    }
+
 }
