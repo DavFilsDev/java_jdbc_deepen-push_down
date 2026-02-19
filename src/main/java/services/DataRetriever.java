@@ -1,8 +1,7 @@
 package services;
 
 import db.DBConnection;
-import models.InvoiceStatus;
-import models.InvoiceTotal;
+import models.*;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -81,6 +80,38 @@ public class DataRetriever {
             }
 
             return results;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            dbConnection.close(connection);
+        }
+    }
+
+    public InvoiceStatusTotals computeStatusTotals() {
+        String sql = """
+        SELECT
+            SUM(CASE WHEN i.status = 'PAID' THEN il.quantity * il.unit_price ELSE 0 END) AS total_paid,
+            SUM(CASE WHEN i.status = 'CONFIRMED' THEN il.quantity * il.unit_price ELSE 0 END) AS total_confirmed,
+            SUM(CASE WHEN i.status = 'DRAFT' THEN il.quantity * il.unit_price ELSE 0 END) AS total_draft
+        FROM invoice i
+        JOIN invoice_line il ON i.id = il.invoice_id;
+    """;
+
+        Connection connection = dbConnection.getDBConnection();
+
+        try (PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                BigDecimal paid = rs.getBigDecimal("total_paid");
+                BigDecimal confirmed = rs.getBigDecimal("total_confirmed");
+                BigDecimal draft = rs.getBigDecimal("total_draft");
+
+                return new InvoiceStatusTotals(paid, confirmed, draft);
+            }
+
+            return null;
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
