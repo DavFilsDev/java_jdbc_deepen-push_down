@@ -154,17 +154,17 @@ public class DataRetriever {
 
     public List<InvoiceTaxSummary> findInvoiceTaxSummaries() {
         String sql = """
-        SELECT 
-            i.id,
-            SUM(il.quantity * il.unit_price) AS total_ht,
-            SUM(il.quantity * il.unit_price) * (t.rate / 100) AS total_tva,
-            SUM(il.quantity * il.unit_price) * (1 + t.rate / 100) AS total_ttc
-        FROM invoice i
-        JOIN invoice_line il ON i.id = il.invoice_id
-        CROSS JOIN tax_config t
-        GROUP BY i.id, t.rate
-        ORDER BY i.id;
-    """;
+            SELECT 
+                i.id,
+                ROUND(SUM(il.quantity * il.unit_price), 2) AS total_ht,
+                ROUND(SUM(il.quantity * il.unit_price) * (t.rate / 100), 2) AS total_tva,
+                ROUND(SUM(il.quantity * il.unit_price) * (1 + t.rate / 100), 2) AS total_ttc
+            FROM invoice i
+            JOIN invoice_line il ON i.id = il.invoice_id
+            CROSS JOIN tax_config t
+            GROUP BY i.id, t.rate
+            ORDER BY i.id;
+        """;
 
         Connection connection = dbConnection.getDBConnection();
         List<InvoiceTaxSummary> results = new ArrayList<>();
@@ -192,18 +192,18 @@ public class DataRetriever {
 
     public BigDecimal computeWeightedTurnoverTtc() {
         String sql = """
-        SELECT 
-            SUM(
-                CASE 
-                    WHEN i.status = 'PAID' THEN (il.quantity * il.unit_price) * (1 + t.rate / 100) * 1.0
-                    WHEN i.status = 'CONFIRMED' THEN (il.quantity * il.unit_price) * (1 + t.rate / 100) * 0.5
-                    WHEN i.status = 'DRAFT' THEN 0
-                END
-            ) AS weighted_ttc
-        FROM invoice i
-        JOIN invoice_line il ON i.id = il.invoice_id
-        CROSS JOIN tax_config t;
-    """;
+            SELECT 
+                ROUND(SUM(
+                    CASE\s
+                        WHEN i.status = 'PAID' THEN (il.quantity * il.unit_price) * (1 + t.rate / 100) * 1.0
+                        WHEN i.status = 'CONFIRMED' THEN (il.quantity * il.unit_price) * (1 + t.rate / 100) * 0.5
+                        WHEN i.status = 'DRAFT' THEN 0
+                    END
+                ), 2) AS weighted_ttc
+            FROM invoice i
+            JOIN invoice_line il ON i.id = il.invoice_id
+            CROSS JOIN tax_config t;
+        """;
 
         Connection connection = dbConnection.getDBConnection();
 
