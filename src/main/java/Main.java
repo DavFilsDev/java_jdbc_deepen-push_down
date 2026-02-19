@@ -1,6 +1,6 @@
 import db.DBConnection;
+import models.*;
 import services.DataRetriever;
-import models.InvoiceTotal;
 
 import java.util.List;
 
@@ -14,6 +14,7 @@ public class Main {
         try {
             testFindInvoiceTotals(dataRetriever);
             testFindConfirmedAndPaidInvoiceTotals(dataRetriever);
+            testComputeStatusTotals(dataRetriever);
         } catch (Exception e) {
             System.err.println("Error during all test: " + e.getMessage());
             e.printStackTrace();
@@ -41,6 +42,13 @@ public class Main {
                     + it.getStatus() + " | "
                     + it.getTotalAmount());
         }
+    }
+
+    public static void testComputeStatusTotals(DataRetriever dataRetriever) {
+        System.out.println("\n=== Q3 - Status Totals ===");
+
+        InvoiceStatusTotals totals = dataRetriever.computeStatusTotals();
+        System.out.println(totals);
     }
 
 }
