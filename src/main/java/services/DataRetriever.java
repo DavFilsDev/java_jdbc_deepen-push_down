@@ -120,4 +120,37 @@ public class DataRetriever {
         }
     }
 
+    public Double computeWeightedTurnover() {
+        String sql = """
+        SELECT 
+            SUM(
+                CASE 
+                    WHEN i.status = 'PAID' THEN il.quantity * il.unit_price * 1.0
+                    WHEN i.status = 'CONFIRMED' THEN il.quantity * il.unit_price * 0.5
+                    WHEN i.status = 'DRAFT' THEN 0
+                END
+            ) AS weighted_turnover
+        FROM invoice i
+        JOIN invoice_line il ON i.id = il.invoice_id;
+    """;
+
+        Connection connection = dbConnection.getDBConnection();
+
+        try (PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                return rs.getDouble("weighted_turnover");
+            }
+
+            return 0.0;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            dbConnection.close(connection);
+        }
+    }
+
+
 }
