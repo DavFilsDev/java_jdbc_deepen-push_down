@@ -1,23 +1,32 @@
-import dao.InvoiceDAO;
 import db.DBConnection;
+import services.DataRetriever;
 import models.InvoiceTotal;
 
-import java.sql.Connection;
+import java.util.List;
 
 public class Main {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
 
         DBConnection db = new DBConnection();
-        Connection conn = db.getDBConnection();
+        DataRetriever dataRetriever = new DataRetriever(db);
 
-        InvoiceDAO dao = new InvoiceDAO(conn);
+        try {
+            testFindInvoiceTotals(dataRetriever);
 
-        for (InvoiceTotal total : dao.findInvoiceTotals()) {
-            System.out.println(total);
+        } catch (Exception e) {
+            System.err.println("Erreur pendant les tests: " + e.getMessage());
+            e.printStackTrace();
         }
+    }
 
-        db.close(conn);
+    public static void testFindInvoiceTotals(DataRetriever dataRetriever) {
+        System.out.println("=== Test Q1: Invoice Totals ===");
+
+        List<InvoiceTotal> totals = dataRetriever.findInvoiceTotals();
+
+        for (InvoiceTotal it : totals) {
+            System.out.println(it);
+        }
     }
 }
-
