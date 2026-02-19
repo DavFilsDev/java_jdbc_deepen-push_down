@@ -16,8 +16,9 @@ public class Main {
             testFindConfirmedAndPaidInvoiceTotals(dataRetriever);
             testComputeStatusTotals(dataRetriever);
             testComputeWeightedTurnover(dataRetriever);
+            testFindInvoiceTaxSummaries(dataRetriever);
         } catch (Exception e) {
-            System.err.println("Error during all test: " + e.getMessage());
+            System.err.println("Error during test: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -59,4 +60,10 @@ public class Main {
         System.out.println("Weighted Turnover = " + turnover);
     }
 
+    public static void testFindInvoiceTaxSummaries(DataRetriever dataRetriever) {
+        System.out.println("\n=== Q5-A - Invoice Tax Summaries ===");
+
+        dataRetriever.findInvoiceTaxSummaries()
+                .forEach(System.out::println);
+    }
 }
